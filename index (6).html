@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yasir | Dynamic Student Portfolio</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* ==================== Root Variables (Vibrant & Rich Theme) ==================== */
+        :root {
+            --bg-color: #fff9f6;
+            --text-color: #2c2c2c;
+            --primary-accent: #ef233c; /* Strong Red */
+            --secondary-accent: #ffb703; /* Vibrant Gold/Yellow */
+            --card-bg: #FFFFFF;
+            --border-color: #ffeee5;
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-accent: rgba(239, 35, 60, 0.15);
+        }
+
+        /* ==================== Basic Setup & Reset ==================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+        html { font-size: 62.5%; overflow-x: hidden; }
+        body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.7; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 10rem 0; position: relative; overflow: hidden; }
+        
+        .section-title { font-size: 4rem; font-weight: 800; text-align: center; margin-bottom: 5rem; position: relative; }
+        .section-title span { background: linear-gradient(90deg, var(--secondary-accent), var(--primary-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* ==================== Header / Navigation ==================== */
+        .header { position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 0; z-index: 100; transition: all 0.3s ease; }
+        .header.sticky { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 4px 15px var(--shadow-light); }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 2.8rem; font-weight: 800; color: var(--text-color); text-decoration: none; }
+        .logo span { color: var(--primary-accent); }
+        .nav-links { display: flex; gap: 4rem; list-style: none; }
+        .nav-links a { text-decoration: none; font-size: 1.6rem; font-weight: 600; color: var(--text-color); transition: color 0.3s; position: relative; padding-bottom: 5px; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; background: var(--primary-accent); transition: width 0.3s ease; }
+        .nav-links a:hover { color: var(--primary-accent); }
+        .nav-links a:hover::after { width: 100%; }
+        
+        /* ==================== Hero Section ==================== */
+        .hero { min-height: 100vh; display: flex; align-items: center; }
+        .hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; align-items: center; gap: 6rem; }
+        .hero-text h1 { font-size: 6rem; font-weight: 800; line-height: 1.2; margin-bottom: 2rem; }
+        .hero-text .tagline { display: inline-block; font-size: 1.8rem; font-weight: 600; background: var(--secondary-accent); color: var(--text-color); padding: 0.5rem 1.5rem; border-radius: 50px; margin-bottom: 2rem; }
+        .hero-text p { font-size: 1.8rem; color: #555; margin-bottom: 3rem; }
+        .cta-button { text-decoration: none; display: inline-block; padding: 1.5rem 4rem; background: var(--primary-accent); color: white; font-size: 1.6rem; font-weight: 600; border-radius: 50px; transition: all 0.3s ease; box-shadow: 0 10px 25px var(--shadow-accent); }
+        .cta-button:hover { transform: translateY(-5px); box-shadow: 0 15px 30px var(--shadow-accent); }
+        
+        .hero-image { position: relative; text-align: center; }
+        .hero-image-frame { position: relative; display: inline-block; }
+        .hero-image img { width: 320px; height: 400px; object-fit: cover; border-radius: 2rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); z-index: 2; position: relative; }
+        .hero-image .bg-shape { content: ''; position: absolute; top: -20px; left: -20px; width: 100%; height: 100%; background: linear-gradient(45deg, var(--secondary-accent), var(--primary-accent)); border-radius: 2rem; z-index: 1; transform: rotate(-5deg); transition: transform 0.3s ease; }
+        .hero-image-frame:hover .bg-shape { transform: rotate(0deg); }
+
+        /* ==================== Key Strengths Section ==================== */
+        #strengths { background-color: var(--card-bg); }
+        .strengths-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; }
+        .strength-card { text-align: center; padding: 3rem; border: 1px solid var(--border-color); border-radius: 15px; transition: all 0.3s ease; }
+        .strength-card:hover { transform: translateY(-10px); border-color: var(--primary-accent); box-shadow: 0 20px 40px var(--shadow-light); }
+        .strength-icon { font-size: 4rem; color: var(--primary-accent); margin-bottom: 1.5rem; }
+        .strength-card h3 { font-size: 2rem; font-weight: 600; margin-bottom: 1rem; }
+        .strength-card p { font-size: 1.5rem; color: #666; }
+
+        /* ==================== Skills Section ==================== */
+        .skills-container { max-width: 800px; margin: 0 auto; }
+        .skill-item { margin-bottom: 2.5rem; }
+        .skill-info { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+        .skill-info h4 { font-size: 1.6rem; font-weight: 600; }
+        .progress-bar { width: 100%; height: 12px; background-color: var(--border-color); border-radius: 6px; }
+        .progress { width: 0; height: 100%; background: linear-gradient(90deg, var(--secondary-accent), var(--primary-accent)); border-radius: 6px; transition: width 2s cubic-bezier(0.25, 1, 0.5, 1); }
+
+        /* ==================== Projects Section ==================== */
+        #projects { background-color: var(--card-bg); }
+        .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4rem; }
+        .project-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px var(--shadow-light); transition: all 0.3s ease; }
+        .project-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px var(--shadow-accent); }
+        .project-image { position: relative; }
+        .project-image img { width: 100%; height: 250px; object-fit: cover; }
+        .project-tags { position: absolute; top: 1rem; left: 1rem; }
+        .project-tags span { background: var(--primary-accent); color: white; padding: 0.3rem 1rem; border-radius: 50px; font-size: 1.2rem; font-weight: 500; }
+        .project-info { padding: 2.5rem; }
+        .project-info h3 { font-size: 2.2rem; font-weight: 700; margin-bottom: 1rem; }
+        .project-info p { font-size: 1.5rem; color: #666; margin-bottom: 2rem; }
+        .project-link { text-decoration: none; color: var(--primary-accent); font-weight: 600; font-size: 1.5rem; }
+        .project-link i { margin-left: 5px; transition: transform 0.3s; }
+        .project-link:hover i { transform: translateX(5px); }
+
+        /* ==================== Testimonials Section ==================== */
+        .testimonial-card { max-width: 700px; margin: 0 auto; background: white; padding: 4rem; border-radius: 20px; text-align: center; box-shadow: 0 15px 40px var(--shadow-light); }
+        .testimonial-card i { font-size: 3rem; color: var(--secondary-accent); margin-bottom: 2rem; }
+        .testimonial-text { font-size: 1.8rem; font-style: italic; color: #555; margin-bottom: 2rem; }
+        .testimonial-author h4 { font-size: 1.8rem; font-weight: 600; }
+        .testimonial-author p { font-size: 1.4rem; color: var(--primary-accent); }
+
+        /* ==================== Footer ==================== */
+        .footer { padding: 6rem 0 3rem 0; background-color: #f8f1ec; text-align: center; }
+        .footer .logo { margin-bottom: 2rem; display: inline-block; }
+        .footer-nav { list-style: none; display: flex; justify-content: center; gap: 3rem; margin-bottom: 3rem; }
+        .footer-nav a { text-decoration: none; font-size: 1.6rem; font-weight: 500; color: var(--text-color); transition: color 0.3s; }
+        .footer-nav a:hover { color: var(--primary-accent); }
+        .developer-credit { font-size: 1.4rem; color: #888; margin-bottom: 1rem; }
+        .developer-credit a { color: var(--primary-accent); font-weight: 600; text-decoration: none; }
+        .copyright { font-size: 1.3rem; color: #aaa; }
+        
+        /* ==================== Responsive Design ==================== */
+        @media (max-width: 992px) {
+            .hero-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-text { order: 2; margin-top: 5rem; }
+            .hero-image { order: 1; }
+        }
+        @media (max-width: 768px) {
+            html { font-size: 60%; }
+            .nav-links { display: none; }
+            .projects-grid, .strengths-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== Header ==================== -->
+    <header class="header">
+        <div class="container navbar">
+            <a href="#" class="logo">Yasir<span>.</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#strengths">Strengths</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ==================== Hero Section ==================== -->
+        <section class="hero" id="hero">
+            <div class="container hero-grid">
+                <div class="hero-text">
+                    <span class="tagline">Emerson University Student</span>
+                    <h1>Hello, I'm Yasir</h1>
+                    <p>A curious and dedicated student building a foundation for a future in technology and creative problem-solving. Welcome to my digital portfolio.</p>
+                    <a href="#contact" class="cta-button">Get In Touch</a>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-image-frame">
+                        <!-- ==> YASIR KI PICTURE YAHA LAGA DI HAI <== -->
+                        <img src="https://i.ibb.co/hxh2ddHv/Whats-App-Image-2026-01-05-at-7-18-12-AM.jpg" alt="Yasir's Profile Picture">
+                        <div class="bg-shape"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== Key Strengths Section ==================== -->
+        <section id="strengths">
+            <div class="container">
+                <h2 class="section-title"><span>My</span> Key Strengths</h2>
+                <div class="strengths-grid">
+                    <div class="strength-card">
+                        <div class="strength-icon"><i class="fas fa-brain"></i></div>
+                        <h3>Analytical Thinking</h3>
+                        <p>I enjoy breaking down complex problems into manageable parts to find effective solutions.</p>
+                    </div>
+                    <div class="strength-card">
+                        <div class="strength-icon"><i class="fas fa-users"></i></div>
+                        <h3>Team Player</h3>
+                        <p>I thrive in collaborative settings, believing that the best results come from teamwork.</p>
+                    </div>
+                    <div class="strength-card">
+                        <div class="strength-icon"><i class="fas fa-lightbulb"></i></div>
+                        <h3>Eager to Learn</h3>
+                        <p>My passion for knowledge drives me to constantly seek out new skills and information.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== Skills Section ==================== -->
+        <section id="skills">
+            <div class="container">
+                <h2 class="section-title"><span>Academic</span> & Soft Skills</h2>
+                <div class="skills-container">
+                    <div class="skill-item">
+                        <div class="skill-info"><h4>Research & Analysis</h4><span>85%</span></div>
+                        <div class="progress-bar"><div class="progress" data-width="85%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info"><h4>Public Speaking & Presentation</h4><span>90%</span></div>
+                        <div class="progress-bar"><div class="progress" data-width="90%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info"><h4>Critical Thinking</h4><span>80%</span></div>
+                        <div class="progress-bar"><div class="progress" data-width="80%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== Projects Section ==================== -->
+        <section id="projects">
+            <div class="container">
+                <h2 class="section-title"><span>Featured</span> University Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2070&auto=format&fit=crop" alt="Project 1">
+                            <div class="project-tags"><span>Research</span></div>
+                        </div>
+                        <div class="project-info">
+                            <h3>Market Analysis Study</h3>
+                            <p>An in-depth analysis of emerging market trends for a business studies course.</p>
+                            <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1556740738-b6a63e2775df?q=80&w=2070&auto=format&fit=crop" alt="Project 2">
+                            <div class="project-tags"><span>Case Study</span></div>
+                        </div>
+                        <div class="project-info">
+                            <h3>Digital Branding Case Study</h3>
+                            <p>A detailed case study on the digital strategy of a successful modern startup.</p>
+                            <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ==================== Testimonials Section ==================== -->
+        <section id="testimonials">
+            <div class="container">
+                 <h2 class="section-title"><span>Feedback</span> & Recognition</h2>
+                 <div class="testimonial-card">
+                    <i class="fas fa-quote-left"></i>
+                    <p class="testimonial-text">"Yasir is a proactive and insightful student who consistently contributes thoughtful perspectives in class. His dedication is commendable."</p>
+                    <div class="testimonial-author">
+                        <h4>- Prof. Jane Doe (Demo)</h4>
+                        <p>Emerson University</p>
+                    </div>
+                 </div>
+            </div>
+        </section>
+        
+        <!-- ==================== Contact Section ==================== -->
+        <section id="contact">
+            <div class="container">
+                <h2 class="section-title"><span>Let's</span> Connect</h2>
+                <a href="mailto:yasir.email@example.com" class="cta-button">Contact for Opportunities</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== Footer ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <a href="#" class="logo">Yasir<span>.</span></a>
+            <ul class="footer-nav">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#strengths">Strengths</a></li>
+                <li><a href="#projects">Projects</a></li>
+            </ul>
+            <div class="developer-credit">
+                <p>Website Designed & Developed by <a href="https://www.fiverr.com/s/xX9rddx" target="_blank">Muhammad Umair Amir</a></p>
+            </div>
+            <p class="copyright">&copy; 2026 Yasir. All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <!-- ScrollReveal JS for animations -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- Embedded Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.querySelector('.header');
+            window.addEventListener('scroll', () => header.classList.toggle('sticky', window.scrollY > 50));
+
+            const skillsSection = document.querySelector('#skills');
+            const observer = new IntersectionObserver(entries => {
+                if(entries[0].isIntersecting) {
+                    document.querySelectorAll('.progress').forEach(bar => {
+                        bar.style.width = bar.getAttribute('data-width');
+                    });
+                }
+            }, { threshold: 0.5 });
+            if(skillsSection) observer.observe(skillsSection);
+
+            const sr = ScrollReveal({ distance: '60px', duration: 1500, delay: 200, reset: false });
+            sr.reveal('.hero-text', { origin: 'left' });
+            sr.reveal('.hero-image', { origin: 'right', delay: 400 });
+            sr.reveal('.section-title', { origin: 'top' });
+            sr.reveal('.strength-card', { origin: 'bottom', interval: 150 });
+            sr.reveal('.project-card', { origin: 'bottom', interval: 200, scale: 0.95 });
+            sr.reveal('.testimonial-card', { origin: 'bottom', scale: 0.9 });
+        });
+    </script>
+
+</body>
+</html>
