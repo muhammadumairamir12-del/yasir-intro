@@ -1,0 +1,130 @@
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Search, Menu, User, MapPin, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { SITE_CONFIG, CATEGORIES } from "@/config/multan";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
+export function Navbar() {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const pathname = usePathname();
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center space-x-2">
+            <span className="text-2xl font-bold tracking-tight text-primary">
+              {SITE_CONFIG.name}
+            </span>
+          </Link>
+
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 hover:text-primary transition-colors">
+                Services
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-[200px]">
+                {CATEGORIES.map((cat) => (
+                  <DropdownMenuItem key={cat.id}>
+                    <Link href={`/categories/${cat.id}`} className="w-full">{cat.name}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Link
+              href="/how-it-works"
+              className={cn(
+                "hover:text-primary transition-colors",
+                pathname === "/how-it-works" ? "text-primary" : "text-muted-foreground"
+              )}
+            >
+              How it Works
+            </Link>
+            <Link
+              href="/contact"
+              className={cn(
+                "hover:text-primary transition-colors",
+                pathname === "/contact" ? "text-primary" : "text-muted-foreground"
+              )}
+            >
+              Contact
+            </Link>
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="hidden lg:flex items-center bg-secondary rounded-full px-3 py-1.5 gap-2 border">
+            <MapPin className="h-4 w-4 text-primary" />
+            <span className="text-xs font-medium">Multan</span>
+          </div>
+
+          <div className="hidden sm:flex items-center relative w-64 lg:w-80">
+            <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search services..."
+              className="pl-9 bg-secondary border-none rounded-full h-9 focus-visible:ring-primary"
+            />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" className="hidden sm:flex">
+              <User className="h-5 w-5" />
+            </Button>
+            <Button className="hidden sm:flex rounded-full">Book Now</Button>
+            
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger>
+                <div className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "md:hidden")}>
+                  <Menu className="h-6 w-6" />
+                </div>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <SheetHeader>
+                  <SheetTitle className="text-left">{SITE_CONFIG.name}</SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col gap-4 mt-8">
+                  <Link href="/" onClick={() => setIsOpen(false)} className="text-lg font-medium">Home</Link>
+                  <div className="space-y-3">
+                    <p className="text-sm font-semibold text-muted-foreground uppercase">Categories</p>
+                    {CATEGORIES.map((cat) => (
+                      <Link 
+                        key={cat.id} 
+                        href={`/categories/${cat.id}`} 
+                        onClick={() => setIsOpen(false)}
+                        className="block text-lg"
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
+                  </div>
+                  <Link href="/how-it-works" onClick={() => setIsOpen(false)} className="text-lg font-medium">How it Works</Link>
+                  <Link href="/contact" onClick={() => setIsOpen(false)} className="text-lg font-medium">Contact</Link>
+                  <Button className="w-full mt-4">Login / Sign Up</Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}

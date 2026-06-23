@@ -1,0 +1,334 @@
+"use client";
+
+import * as React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ALL_SERVICES, MULTAN_AREAS } from "@/config/multan";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CheckCircle2, ChevronRight, MapPin, Calendar, Clock, CreditCard, ChevronLeft } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Suspense } from "react";
+
+const STEPS = [
+  { id: "area", title: "Area & Address", icon: MapPin },
+  { id: "datetime", title: "Date & Time", icon: Calendar },
+  { id: "details", title: "Contact Details", icon: Clock },
+  { id: "checkout", title: "Checkout", icon: CreditCard },
+];
+
+const TIME_SLOTS = [
+  "09:00 AM - 11:00 AM",
+  "11:00 AM - 01:00 PM",
+  "01:00 PM - 03:00 PM",
+  "03:00 PM - 05:00 PM",
+  "05:00 PM - 07:00 PM",
+  "07:00 PM - 09:00 PM",
+];
+
+function BookingForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const serviceSlug = searchParams.get("service");
+  const service = ALL_SERVICES.find((s) => s.slug === serviceSlug) || ALL_SERVICES[0];
+
+  const [currentStep, setCurrentStep] = React.useState(0);
+  const [formData, setFormData] = React.useState({
+    area: "",
+    address: "",
+    date: "",
+    timeSlot: "",
+    name: "",
+    phone: "",
+    email: "",
+    notes: "",
+    paymentMethod: "cod",
+  });
+
+  const updateFormData = (data: Partial<typeof formData>) => {
+    setFormData((prev) => ({ ...prev, ...data }));
+  };
+
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1));
+  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
+
+  const isStepValid = () => {
+    if (currentStep === 0) return formData.area && formData.address;
+    if (currentStep === 1) return formData.date && formData.timeSlot;
+    if (currentStep === 2) return formData.name && formData.phone;
+    return true;
+  };
+
+  const handleSubmit = () => {
+     // Mock submission
+     router.push("/booking/success");
+  };
+
+  return (
+    <>
+      <div className="container mx-auto px-4 max-w-5xl">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Main Booking Form */}
+          <div className="flex-grow space-y-8">
+            <div className="flex items-center justify-between">
+               <h1 className="text-3xl font-bold">Book {service.name}</h1>
+               <div className="text-sm font-medium text-muted-foreground">
+                  Step {currentStep + 1} of {STEPS.length}
+               </div>
+            </div>
+
+            {/* Stepper */}
+            <div className="flex justify-between items-center bg-white p-4 rounded-xl border shadow-sm overflow-x-auto no-scrollbar">
+              {STEPS.map((step, index) => (
+                <div key={step.id} className="flex items-center">
+                  <div className={cn(
+                    "flex items-center gap-2 px-3 py-2 rounded-lg transition-colors shrink-0",
+                    currentStep === index ? "bg-primary text-white" : 
+                    currentStep > index ? "text-green-600 bg-green-50" : "text-slate-400"
+                  )}>
+                    {currentStep > index ? <CheckCircle2 className="h-5 w-5" /> : <step.icon className="h-5 w-5" />}
+                    <span className="text-sm font-bold whitespace-nowrap">{step.title}</span>
+                  </div>
+                  {index < STEPS.length - 1 && <ChevronRight className="mx-2 h-4 w-4 text-slate-300" />}
+                </div>
+              ))}
+            </div>
+
+            {/* Form Content */}
+            <Card className="border-none shadow-xl">
+              <CardContent className="p-8">
+                {currentStep === 0 && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="space-y-2">
+                      <Label htmlFor="area">Select Service Area in Multan</Label>
+                      <Select value={formData.area} onValueChange={(v) => updateFormData({ area: v as string })}>
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Where do you need the service?" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {MULTAN_AREAS.map((area) => (
+                            <SelectItem key={area} value={area}>{area}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="address">Full Address / Landmark</Label>
+                      <Input 
+                        id="address" 
+                        placeholder="House #, Street, Block, Landmark..." 
+                        className="h-12"
+                        value={formData.address}
+                        onChange={(e) => updateFormData({ address: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 1 && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="space-y-2">
+                      <Label htmlFor="date">Service Date</Label>
+                      <Input 
+                        id="date" 
+                        type="date" 
+                        className="h-12"
+                        min={new Date().toISOString().split('T')[0]}
+                        value={formData.date}
+                        onChange={(e) => updateFormData({ date: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Available Time Slots</Label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {TIME_SLOTS.map((slot) => (
+                          <div
+                            key={slot}
+                            onClick={() => updateFormData({ timeSlot: slot })}
+                            className={cn(
+                              "p-4 border rounded-xl cursor-pointer text-center font-medium transition-all",
+                              formData.timeSlot === slot ? "border-primary bg-primary/5 text-primary ring-1 ring-primary" : "hover:border-slate-300 bg-slate-50"
+                            )}
+                          >
+                            {slot}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 2 && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Full Name</Label>
+                        <Input 
+                          id="name" 
+                          placeholder="Your Name" 
+                          className="h-12"
+                          value={formData.name}
+                          onChange={(e) => updateFormData({ name: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input 
+                          id="phone" 
+                          placeholder="03xx xxxxxxx" 
+                          className="h-12"
+                          value={formData.phone}
+                          onChange={(e) => updateFormData({ phone: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address (Optional)</Label>
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        placeholder="your@email.com" 
+                        className="h-12"
+                        value={formData.email}
+                        onChange={(e) => updateFormData({ email: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="notes">Additional Instructions</Label>
+                      <textarea
+                        id="notes"
+                        rows={4}
+                        placeholder="Any special requests or details about the work..."
+                        className="w-full p-3 rounded-xl border focus:ring-1 focus:ring-primary outline-none text-sm"
+                        value={formData.notes}
+                        onChange={(e) => updateFormData({ notes: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 3 && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <h3 className="text-xl font-bold">Select Payment Method</h3>
+                    <div className="space-y-4">
+                      {[
+                        { id: "cod", name: "Cash on Delivery", desc: "Pay after service is completed", icon: "💵" },
+                        { id: "easypaisa", name: "Easypaisa", desc: "Pay securely via Easypaisa App", icon: "📱" },
+                        { id: "jazzcash", name: "JazzCash", desc: "Pay securely via JazzCash App", icon: "📱" },
+                        { id: "card", name: "Credit/Debit Card", desc: "Powered by Stripe", icon: "💳" },
+                      ].map((method) => (
+                        <div
+                          key={method.id}
+                          onClick={() => updateFormData({ paymentMethod: method.id })}
+                          className={cn(
+                            "flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-all",
+                            formData.paymentMethod === method.id ? "border-primary bg-primary/5 ring-1 ring-primary" : "hover:border-slate-300"
+                          )}
+                        >
+                          <div className="text-2xl">{method.icon}</div>
+                          <div className="flex-grow">
+                            <p className="font-bold">{method.name}</p>
+                            <p className="text-xs text-muted-foreground">{method.desc}</p>
+                          </div>
+                          <div className={cn(
+                            "w-5 h-5 rounded-full border flex items-center justify-center",
+                            formData.paymentMethod === method.id ? "border-primary bg-primary" : "border-slate-300"
+                          )}>
+                            {formData.paymentMethod === method.id && <div className="w-2 h-2 rounded-full bg-white" />}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-12 flex justify-between gap-4">
+                  <Button
+                    variant="ghost"
+                    onClick={prevStep}
+                    disabled={currentStep === 0}
+                    className="h-12 px-6 font-bold"
+                  >
+                    <ChevronLeft className="mr-2 h-4 w-4" /> Back
+                  </Button>
+                  <Button
+                    onClick={currentStep === STEPS.length - 1 ? handleSubmit : nextStep}
+                    disabled={!isStepValid()}
+                    className="h-12 px-8 font-bold min-w-[140px]"
+                  >
+                    {currentStep === STEPS.length - 1 ? "Complete Booking" : "Next Step"} <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Booking Summary Sidebar */}
+          <div className="w-full lg:w-[350px]">
+             <Card className="sticky top-24 border-none shadow-lg">
+                <CardHeader className="bg-primary text-white rounded-t-xl">
+                  <CardTitle className="text-lg">Order Summary</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex gap-4 pb-6 border-b">
+                    <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center text-2xl">🛠️</div>
+                    <div>
+                      <p className="font-bold">{service.name}</p>
+                      <p className="text-xs text-muted-foreground">Premium Home Service</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Standard Service Fee</span>
+                      <span className="font-medium">Rs. 499</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Visiting Charges</span>
+                      <span className="text-green-600 font-bold">FREE</span>
+                    </div>
+                    <div className="pt-3 border-t flex justify-between items-center">
+                      <span className="font-bold">Total Amount</span>
+                      <span className="text-2xl font-black text-primary">Rs. 499</span>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 p-4 rounded-xl space-y-3 text-xs">
+                    <div className="flex items-center gap-2 text-slate-600">
+                      <MapPin className="h-3 w-3" />
+                      <span>{formData.area || "Location not selected"}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-600">
+                      <Calendar className="h-3 w-3" />
+                      <span>{formData.date || "Date not selected"}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-600">
+                      <Clock className="h-3 w-3" />
+                      <span>{formData.timeSlot || "Time not selected"}</span>
+                    </div>
+                  </div>
+
+                  <p className="text-[10px] text-center text-muted-foreground">
+                    By booking, you agree to our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link>.
+                  </p>
+                </CardContent>
+             </Card>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default function BookingPage() {
+  return (
+    <div className="bg-slate-50 min-h-screen py-12">
+      <Suspense fallback={<div className="container mx-auto px-4 py-20 text-center font-bold">Loading booking form...</div>}>
+        <BookingForm />
+      </Suspense>
+    </div>
+  );
+}

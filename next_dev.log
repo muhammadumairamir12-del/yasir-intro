@@ -1,0 +1,114 @@
+
+> multanskill@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+- Environments: .env
+✓ Ready in 546ms
+
+○ Compiling / ...
+ GET / 200 in 10.0s (next.js: 8.2s, application-code: 1767ms)
+ GET /services/ac-repair 200 in 2.6s (next.js: 2.5s, application-code: 111ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET / 200 in 414ms (next.js: 7ms, application-code: 407ms)
+ GET / 200 in 332ms (next.js: 7ms, application-code: 326ms)
+ GET / 200 in 366ms (next.js: 11ms, application-code: 355ms)
+ GET /booking?service=ac-repair 200 in 1347ms (next.js: 1177ms, application-code: 170ms)
+ GET /dashboard/customer 200 in 1131ms (next.js: 872ms, application-code: 258ms)
+ GET /dashboard/provider 200 in 1141ms (next.js: 996ms, application-code: 145ms)
+ GET /admin 200 in 1115ms (next.js: 931ms, application-code: 184ms)
+ GET / 200 in 344ms (next.js: 19ms, application-code: 324ms)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RedirectBoundary>
+      <RedirectErrorBoundary router={{...}}>
+        <Head>
+        <__next_root_layout_boundary__>
+          <SegmentViewNode type="layout" pagePath="src/layout...">
+            <SegmentTrieNode>
+            <link>
+            <script>
+            <script>
+            <script>
+            <script>
+            <script>
+            <script>
+            <RootLayout>
+              <html lang="en" className="scroll-smooth">
+                <body className="geist_f15b...">
+                  <script>
+                  <Navbar>
+                    <header className="sticky top...">
+                      <div className="container ...">
+                        <div>
+                        <div className="flex items...">
+                          <div>
+                          <div className="hidden sm:...">
+                            <Search>
+                            <Input placeholder="Search ser..." className="pl-9 bg-se...">
+                              <Input type={undefined} data-slot="input" className="w-full min..." ...>
+                                <FieldControl ref={null} type={undefined} data-slot="input" className="w-full min..." ...>
+                                  <input
+                                    id="base-ui-_R_ailb_"
+                                    disabled={false}
+                                    name={undefined}
+                                    ref={function}
+                                    aria-labelledby={undefined}
+                                    autoFocus={false}
+                                    defaultValue={undefined}
+                                    onChange={function}
+                                    onFocus={function}
+                                    onBlur={function}
+                                    onKeyDown={function}
+                                    type={undefined}
+                                    data-slot="input"
+                                    placeholder="Search services..."
+                                    className="w-full min-w-0 border border-input px-2.5 py-1 text-base transition-col..."
+-                                   style={{caret-color:"transparent"}}
+                                  >
+                          ...
+                  ...
+                    <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:0.5, ...}} ...>
+                      <div className="flex flex-..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                        <div>
+                        <div>
+                        <div className="flex-grow ...">
+                          <Search>
+                          <Input placeholder="What servi..." className="pl-12 bord...">
+                            <Input type={undefined} data-slot="input" className="w-full min..." ...>
+                              <FieldControl ref={null} type={undefined} data-slot="input" className="w-full min..." ...>
+                                <input
+                                  id="base-ui-_R_jl35erlb_"
+                                  disabled={false}
+                                  name={undefined}
+                                  ref={function}
+                                  aria-labelledby={undefined}
+                                  autoFocus={false}
+                                  defaultValue={undefined}
+                                  onChange={function}
+                                  onFocus={function}
+                                  onBlur={function}
+                                  onKeyDown={function}
+                                  type={undefined}
+                                  data-slot="input"
+                                  placeholder="What service do you need today?"
+                                  className="w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 ..."
+-                                 style={{caret-color:"transparent"}}
+                                >
+                        ...
+                  ...
+        ...
+ 
